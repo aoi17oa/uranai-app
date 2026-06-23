@@ -37,10 +37,14 @@
       padding: 32px 18px;
     }
 
-    .start-screen {
+    .app-shell {
       width: 100%;
       max-width: 430px;
       text-align: center;
+    }
+
+    .screen[hidden] {
+      display: none;
     }
 
     .badge {
@@ -70,28 +74,73 @@
       font-size: 17px;
     }
 
-    .start-button {
+    .start-button,
+    .choice-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 100%;
-      min-height: 56px;
-      padding: 14px 22px;
       border: 0;
       border-radius: 8px;
-      color: #ffffff;
-      background: #315f9f;
-      box-shadow: 0 10px 22px rgba(49, 95, 159, 0.22);
       font: inherit;
-      font-size: 18px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
     }
 
-    .start-button:focus-visible {
+    .start-button {
+      min-height: 56px;
+      padding: 14px 22px;
+      color: #ffffff;
+      background: #315f9f;
+      box-shadow: 0 10px 22px rgba(49, 95, 159, 0.22);
+      font-size: 18px;
+    }
+
+    .start-button:focus-visible,
+    .choice-button:focus-visible {
       outline: 3px solid #f5c85c;
       outline-offset: 4px;
+    }
+
+    .progress {
+      margin: 0 0 16px;
+      color: #365273;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .question-title {
+      margin: 0 0 22px;
+      color: #17233d;
+      font-size: 26px;
+      line-height: 1.4;
+      letter-spacing: 0;
+    }
+
+    .choices {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+      margin: 0;
+    }
+
+    .choice-button {
+      min-height: 54px;
+      padding: 14px 16px;
+      color: #233755;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(72, 104, 157, 0.22);
+      box-shadow: 0 8px 18px rgba(45, 79, 124, 0.12);
+      font-size: 17px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .complete-message {
+      margin: 18px auto 30px;
+      color: #425b78;
+      font-size: 17px;
     }
 
     @media (max-width: 390px) {
@@ -99,20 +148,114 @@
         padding-inline: 16px;
       }
 
-      .lead {
+      .lead,
+      .complete-message {
         font-size: 16px;
+      }
+
+      .question-title {
+        font-size: 24px;
       }
     }
   </style>
 </head>
 <body>
   <main class="page">
-    <section class="start-screen" aria-labelledby="app-title">
-      <p class="badge">今日の運勢・ラッキーカラー・名言</p>
-      <h1 id="app-title">今日の星うらない</h1>
-      <p class="lead">5つの質問で、今日のあなたにぴったりの運勢を見つけます。</p>
-      <button class="start-button" type="button">占いをはじめる</button>
-    </section>
+    <div class="app-shell">
+      <section class="screen" id="start-screen" aria-labelledby="app-title">
+        <p class="badge">今日の運勢・ラッキーカラー・名言</p>
+        <h1 id="app-title">今日の星うらない</h1>
+        <p class="lead">5つの質問で、今日のあなたにぴったりの運勢を見つけます。</p>
+        <button class="start-button" id="start-button" type="button">占いをはじめる</button>
+      </section>
+
+      <section class="screen" id="question-screen" aria-labelledby="question-title" hidden>
+        <p class="progress" id="progress-text"></p>
+        <h2 class="question-title" id="question-title"></h2>
+        <div class="choices" id="choices"></div>
+      </section>
+
+      <section class="screen" id="complete-screen" aria-labelledby="complete-title" hidden>
+        <p class="badge">回答完了</p>
+        <h2 class="question-title" id="complete-title">5問すべて答えました</h2>
+        <p class="complete-message">回答できました。次のステップで結果を表示します。</p>
+      </section>
+    </div>
   </main>
+
+  <script>
+    const questions = [
+      {
+        text: "今朝の気分に近いものは？",
+        choices: ["すっきりしている", "少しゆっくりしたい", "なんとなくそわそわする"]
+      },
+      {
+        text: "今日、いちばん大事にしたいことは？",
+        choices: ["自分のペース", "人とのつながり", "小さな挑戦"]
+      },
+      {
+        text: "今のあなたに近い過ごし方は？",
+        choices: ["ていねいに整えたい", "楽しく動きたい", "静かに考えたい"]
+      },
+      {
+        text: "気になる色はどれ？",
+        choices: ["やさしい青", "あたたかいピンク", "明るい黄色"]
+      },
+      {
+        text: "今日ほしい言葉は？",
+        choices: ["そのままで大丈夫", "一歩進んでみよう", "ちゃんと休んでいい"]
+      }
+    ];
+
+    const startScreen = document.getElementById("start-screen");
+    const questionScreen = document.getElementById("question-screen");
+    const completeScreen = document.getElementById("complete-screen");
+    const startButton = document.getElementById("start-button");
+    const progressText = document.getElementById("progress-text");
+    const questionTitle = document.getElementById("question-title");
+    const choices = document.getElementById("choices");
+
+    let currentQuestionIndex = 0;
+
+    function showScreen(screen) {
+      startScreen.hidden = screen !== startScreen;
+      questionScreen.hidden = screen !== questionScreen;
+      completeScreen.hidden = screen !== completeScreen;
+    }
+
+    function showQuestion() {
+      const question = questions[currentQuestionIndex];
+      progressText.textContent = `${currentQuestionIndex + 1} / ${questions.length}`;
+      questionTitle.textContent = question.text;
+      choices.innerHTML = "";
+
+      question.choices.forEach((choice) => {
+        const button = document.createElement("button");
+        button.className = "choice-button";
+        button.type = "button";
+        button.textContent = choice;
+        button.addEventListener("click", handleChoice);
+        choices.appendChild(button);
+      });
+
+      showScreen(questionScreen);
+    }
+
+    function handleChoice() {
+      currentQuestionIndex += 1;
+
+      if (currentQuestionIndex >= questions.length) {
+        showScreen(completeScreen);
+        return;
+      }
+
+      showQuestion();
+    }
+
+    startButton.addEventListener("click", () => {
+      currentQuestionIndex = 0;
+      showQuestion();
+    });
+  </script>
 </body>
 </html>
