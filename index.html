@@ -143,6 +143,34 @@
       font-size: 17px;
     }
 
+    .result-list {
+      display: grid;
+      gap: 12px;
+      margin: 24px 0 0;
+      text-align: left;
+    }
+
+    .result-item {
+      padding: 16px;
+      border: 1px solid rgba(72, 104, 157, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 8px 18px rgba(45, 79, 124, 0.1);
+    }
+
+    .result-label {
+      margin: 0 0 6px;
+      color: #365273;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .result-text {
+      margin: 0;
+      color: #233755;
+      font-size: 16px;
+    }
+
     @media (max-width: 390px) {
       .page {
         padding-inline: 16px;
@@ -175,10 +203,24 @@
         <div class="choices" id="choices"></div>
       </section>
 
-      <section class="screen" id="complete-screen" aria-labelledby="complete-title" hidden>
-        <p class="badge">回答完了</p>
-        <h2 class="question-title" id="complete-title">5問すべて答えました</h2>
-        <p class="complete-message">回答できました。次のステップで結果を表示します。</p>
+      <section class="screen" id="result-screen" aria-labelledby="result-title" hidden>
+        <p class="badge" id="result-type"></p>
+        <h2 class="question-title" id="result-title"></h2>
+        <p class="complete-message" id="result-summary"></p>
+        <div class="result-list" aria-label="占い結果">
+          <section class="result-item">
+            <p class="result-label">今日の運勢</p>
+            <p class="result-text" id="fortune-text"></p>
+          </section>
+          <section class="result-item">
+            <p class="result-label">ラッキーカラー</p>
+            <p class="result-text" id="color-text"></p>
+          </section>
+          <section class="result-item">
+            <p class="result-label">ぴったりな名言</p>
+            <p class="result-text" id="quote-text"></p>
+          </section>
+        </div>
       </section>
     </div>
   </main>
@@ -187,40 +229,110 @@
     const questions = [
       {
         text: "今朝の気分に近いものは？",
-        choices: ["すっきりしている", "少しゆっくりしたい", "なんとなくそわそわする"]
+        choices: [
+          { text: "すっきりしている", type: "spark" },
+          { text: "少しゆっくりしたい", type: "calm" },
+          { text: "なんとなくそわそわする", type: "moon" }
+        ]
       },
       {
         text: "今日、いちばん大事にしたいことは？",
-        choices: ["自分のペース", "人とのつながり", "小さな挑戦"]
+        choices: [
+          { text: "自分のペース", type: "calm" },
+          { text: "人とのつながり", type: "heart" },
+          { text: "小さな挑戦", type: "spark" }
+        ]
       },
       {
         text: "今のあなたに近い過ごし方は？",
-        choices: ["ていねいに整えたい", "楽しく動きたい", "静かに考えたい"]
+        choices: [
+          { text: "ていねいに整えたい", type: "leaf" },
+          { text: "楽しく動きたい", type: "spark" },
+          { text: "静かに考えたい", type: "moon" }
+        ]
       },
       {
         text: "気になる色はどれ？",
-        choices: ["やさしい青", "あたたかいピンク", "明るい黄色"]
+        choices: [
+          { text: "やさしい青", type: "calm" },
+          { text: "あたたかいピンク", type: "heart" },
+          { text: "明るい黄色", type: "spark" }
+        ]
       },
       {
         text: "今日ほしい言葉は？",
-        choices: ["そのままで大丈夫", "一歩進んでみよう", "ちゃんと休んでいい"]
+        choices: [
+          { text: "そのままで大丈夫", type: "leaf" },
+          { text: "一歩進んでみよう", type: "spark" },
+          { text: "ちゃんと休んでいい", type: "moon" }
+        ]
       }
     ];
 
+    const results = {
+      spark: {
+        type: "きらめきタイプ",
+        title: "小さな一歩が光る日",
+        summary: "思いついたことを少しだけ試すと、気持ちが前に向きやすい日です。",
+        fortune: "新しい流れを受け取りやすい運勢です。完璧を目指すより、まず一歩だけ動いてみるとよさそうです。",
+        color: "クリアブルー",
+        quote: "小さな一歩も、今日のあなたをちゃんと進めてくれます。"
+      },
+      calm: {
+        type: "やすらぎタイプ",
+        title: "自分のペースを守る日",
+        summary: "急がず整えることで、自然と調子が戻ってくる日です。",
+        fortune: "落ち着いて選ぶほど運が味方します。予定を詰め込みすぎず、深呼吸できる余白を残しましょう。",
+        color: "やさしい水色",
+        quote: "ゆっくり進む時間にも、ちゃんと意味があります。"
+      },
+      heart: {
+        type: "ぬくもりタイプ",
+        title: "言葉がやさしく届く日",
+        summary: "人とのやりとりから、ほっとする力をもらいやすい日です。",
+        fortune: "あいさつや短い会話が運をひらきます。無理に明るくしなくても、素直な一言で十分です。",
+        color: "ソフトピンク",
+        quote: "やさしさは、渡した人にも戻ってくる小さなお守りです。"
+      },
+      moon: {
+        type: "月あかりタイプ",
+        title: "心の声を聞く日",
+        summary: "静かな時間を少し作ると、本当に大事なことが見えやすい日です。",
+        fortune: "考えを整理するほど安心が増える運勢です。迷ったら、今日は少し保留にしても大丈夫です。",
+        color: "ラベンダー",
+        quote: "立ち止まることは、迷いではなく自分を大切にする合図です。"
+      },
+      leaf: {
+        type: "整えタイプ",
+        title: "身の回りを整える日",
+        summary: "小さな片づけや準備が、今日の安心につながりやすい日です。",
+        fortune: "足元を整えるほど、気持ちも軽くなります。ひとつだけ片づける、ひとつだけ決める、それで十分です。",
+        color: "ミントグリーン",
+        quote: "整えた場所から、心にもやさしい風が入ってきます。"
+      }
+    };
+
     const startScreen = document.getElementById("start-screen");
     const questionScreen = document.getElementById("question-screen");
-    const completeScreen = document.getElementById("complete-screen");
+    const resultScreen = document.getElementById("result-screen");
     const startButton = document.getElementById("start-button");
     const progressText = document.getElementById("progress-text");
     const questionTitle = document.getElementById("question-title");
     const choices = document.getElementById("choices");
+    const resultType = document.getElementById("result-type");
+    const resultTitle = document.getElementById("result-title");
+    const resultSummary = document.getElementById("result-summary");
+    const fortuneText = document.getElementById("fortune-text");
+    const colorText = document.getElementById("color-text");
+    const quoteText = document.getElementById("quote-text");
 
     let currentQuestionIndex = 0;
+    let scores = {};
 
     function showScreen(screen) {
       startScreen.hidden = screen !== startScreen;
       questionScreen.hidden = screen !== questionScreen;
-      completeScreen.hidden = screen !== completeScreen;
+      resultScreen.hidden = screen !== resultScreen;
     }
 
     function showQuestion() {
@@ -233,27 +345,49 @@
         const button = document.createElement("button");
         button.className = "choice-button";
         button.type = "button";
-        button.textContent = choice;
-        button.addEventListener("click", handleChoice);
+        button.textContent = choice.text;
+        button.addEventListener("click", () => handleChoice(choice.type));
         choices.appendChild(button);
       });
 
       showScreen(questionScreen);
     }
 
-    function handleChoice() {
+    function handleChoice(type) {
+      scores[type] = (scores[type] || 0) + 1;
       currentQuestionIndex += 1;
 
       if (currentQuestionIndex >= questions.length) {
-        showScreen(completeScreen);
+        showResult();
         return;
       }
 
       showQuestion();
     }
 
+    function getResultType() {
+      const typeOrder = ["spark", "calm", "heart", "moon", "leaf"];
+      return typeOrder.reduce((bestType, type) => {
+        const bestScore = scores[bestType] || 0;
+        const score = scores[type] || 0;
+        return score > bestScore ? type : bestType;
+      }, typeOrder[0]);
+    }
+
+    function showResult() {
+      const result = results[getResultType()];
+      resultType.textContent = result.type;
+      resultTitle.textContent = result.title;
+      resultSummary.textContent = result.summary;
+      fortuneText.textContent = result.fortune;
+      colorText.textContent = result.color;
+      quoteText.textContent = result.quote;
+      showScreen(resultScreen);
+    }
+
     startButton.addEventListener("click", () => {
       currentQuestionIndex = 0;
+      scores = {};
       showQuestion();
     });
   </script>
