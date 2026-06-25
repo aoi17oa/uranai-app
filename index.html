@@ -323,16 +323,67 @@
       font-size: 17px;
     }
 
+    .result-celebration {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 10px;
+      margin: 6px 0 16px;
+      color: #2f7d8c;
+    }
+
+    .result-burst {
+      height: 2px;
+      border-radius: 999px;
+      background: repeating-linear-gradient(
+        90deg,
+        #aee7dd 0 18px,
+        transparent 18px 26px,
+        #f7df7b 26px 38px,
+        transparent 38px 46px
+      );
+    }
+
+    .result-tooth {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      border: 1px solid rgba(109, 165, 177, 0.28);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #fffbea 100%);
+      box-shadow: 0 10px 22px rgba(54, 94, 113, 0.12);
+    }
+
+    .result-tooth svg {
+      width: 38px;
+      height: 42px;
+      stroke: currentColor;
+    }
+
+    .result-cheer {
+      margin: 0 0 20px;
+      padding: 14px 16px;
+      border: 1px solid rgba(247, 223, 123, 0.62);
+      border-radius: 8px;
+      background: linear-gradient(90deg, #fffbea 0%, #f8fffd 100%);
+      color: #315c67;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: left;
+      box-shadow: 0 8px 18px rgba(54, 94, 113, 0.08);
+    }
+
     .result-list {
       display: grid;
       gap: 12px;
-      margin: 24px 0 0;
+      margin: 0;
       text-align: left;
     }
 
     .result-item {
       position: relative;
-      padding: 16px;
+      padding: 16px 16px 16px 18px;
       border: 1px solid rgba(121, 169, 177, 0.24);
       border-radius: 8px;
       background: linear-gradient(180deg, #fbfefd 0%, #fffdf7 100%);
@@ -348,8 +399,41 @@
       background: #aee7dd;
     }
 
+    .result-item:nth-child(2)::before {
+      background: #dff0ff;
+    }
+
+    .result-item:nth-child(3)::before {
+      background: #f7df7b;
+    }
+
+    .result-card-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 8px;
+    }
+
+    .result-card-icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      background: #fffbea;
+      color: #2f7d8c;
+      box-shadow: inset 0 0 0 1px rgba(247, 223, 123, 0.55);
+    }
+
+    .result-card-icon svg {
+      width: 23px;
+      height: 23px;
+      stroke: currentColor;
+    }
+
     .result-label {
-      margin: 0 0 6px;
+      margin: 0;
       color: #315c67;
       font-size: 16px;
       font-weight: 700;
@@ -359,6 +443,31 @@
       margin: 0;
       color: #263f50;
       font-size: 16px;
+    }
+
+    .restart-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 54px;
+      margin: 18px 0 0;
+      padding: 14px 18px;
+      border: 1px solid rgba(121, 169, 177, 0.3);
+      border-radius: 8px;
+      color: #315c67;
+      background: #f8fffd;
+      box-shadow: 0 8px 18px rgba(54, 94, 113, 0.08);
+      cursor: pointer;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 700;
+      touch-action: manipulation;
+    }
+
+    .restart-button:focus-visible {
+      outline: 3px solid #f5c85c;
+      outline-offset: 4px;
     }
 
     @media (max-width: 390px) {
@@ -496,23 +605,64 @@
       </section>
 
       <section class="screen" id="result-screen" aria-labelledby="result-title" hidden>
+        <div class="result-celebration" aria-hidden="true">
+          <span class="result-burst"></span>
+          <span class="result-tooth">
+            <svg viewBox="0 0 80 88" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10c8-5 13 2 18 2s10-7 18-2c12 8 8 26 3 39-4 11-5 27-13 27-5 0-5-16-8-16s-3 16-8 16c-8 0-9-16-13-27-5-13-9-31 3-39z" fill="#ffffff" />
+              <path d="M29 34c3 3 7 4 11 4s8-1 11-4" />
+              <path d="M31 24h.01" />
+              <path d="M49 24h.01" />
+            </svg>
+          </span>
+          <span class="result-burst"></span>
+        </div>
         <p class="badge" id="result-type"></p>
         <h2 class="question-title" id="result-title"></h2>
         <p class="complete-message" id="result-summary"></p>
+        <p class="result-cheer" id="result-cheer"></p>
         <div class="result-list" aria-label="占い結果">
           <section class="result-item">
-            <p class="result-label">ラッキーアイテム</p>
+            <div class="result-card-head">
+              <span class="result-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 18L16 6" />
+                  <path d="M14 4l6 6" />
+                  <path d="M12 8l4 4" />
+                </svg>
+              </span>
+              <p class="result-label">ラッキーアイテム</p>
+            </div>
             <p class="result-text" id="fortune-text"></p>
           </section>
           <section class="result-item">
-            <p class="result-label">元気になれる名言</p>
+            <div class="result-card-head">
+              <span class="result-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 5h12v14H6z" />
+                  <path d="M9 9h6" />
+                  <path d="M9 13h4" />
+                </svg>
+              </span>
+              <p class="result-label">元気になれる名言</p>
+            </div>
             <p class="result-text" id="color-text"></p>
           </section>
           <section class="result-item">
-            <p class="result-label">吉となる行動</p>
+            <div class="result-card-head">
+              <span class="result-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 5h10" />
+                  <path d="M8 12l2 2 5-5" />
+                  <path d="M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+                </svg>
+              </span>
+              <p class="result-label">吉となる行動</p>
+            </div>
             <p class="result-text" id="quote-text"></p>
           </section>
         </div>
+        <button class="restart-button" id="restart-button" type="button">もう一度みる</button>
       </section>
     </div>
   </main>
@@ -564,43 +714,48 @@
     const results = {
       spark: {
         type: "すっきりスタートタイプ",
-        title: "小さな一歩が進む日",
-        summary: "思いついたことを少しだけ試すと、朝の空気が軽くなりそうです。",
-        fortune: "歯ブラシ。まっすぐな毛先みたいに、今日は最初のひと動きがきれいに決まりそうです。",
-        color: "小さな一歩も、今日のあなたをちゃんと進めてくれます。",
-        quote: "朝いちばんに、よく使う道具をひとつだけ整える。気分までさっぱりします。"
+        title: "朝のギア、入りました",
+        summary: "今日は歯ブラシ級にまっすぐ進めそうです。勢いはあるので、曲がり角だけ少しゆっくり。",
+        cheer: "本日の合言葉: 毛先はまっすぐ、気持ちは軽く。",
+        fortune: "歯ブラシ。今日のあなたは、朝から仕事の流れをさっぱり整える係です。",
+        color: "小さな一歩も、今日のあなたをちゃんと進めてくれます。カルテより先に気分のページをめくりましょう。",
+        quote: "最初に使う道具をひとつ整える。小さな準備で、気持ちの歯石も少し取れます。"
       },
       calm: {
         type: "ゆったり整えタイプ",
-        title: "自分のペースを守る日",
-        summary: "急がず整えることで、自然と調子が戻ってくる日です。",
-        fortune: "デンタルミラー。少し角度を変えて見るだけで、気づけることが増える日です。",
-        color: "ゆっくり進む時間にも、ちゃんと意味があります。",
-        quote: "始業前に深呼吸をひとつ。急がない準備が、今日の安心を作ります。"
+        title: "ゆっくりでもツヤが出る日",
+        summary: "急がなくても大丈夫。今日は落ち着いた確認が、チームの安心をぴかっと光らせます。",
+        cheer: "本日の合言葉: 早さより、やさしい確認。",
+        fortune: "デンタルミラー。少し角度を変えて見るだけで、見落としそうな良い流れに気づけます。",
+        color: "ゆっくり進む時間にも、ちゃんと意味があります。むしろ今日は、それが頼れる味方です。",
+        quote: "始業前に深呼吸をひとつ。胸の中の混雑を、受付前にそっと整理しましょう。"
       },
       heart: {
         type: "にこやか声かけタイプ",
-        title: "言葉がやさしく届く日",
-        summary: "人とのやりとりから、ほっとする力をもらいやすい日です。",
-        fortune: "メモパッド。ひと言メモが、チームの空気をふわっと助けてくれそうです。",
-        color: "やさしさは、渡した人にも戻ってくる小さなエネルギーです。",
-        quote: "スタッフに短い声かけをひとつ。受付まわりの空気まで明るくなります。"
+        title: "ひと言で空気が明るい日",
+        summary: "今日のあなたの声かけは、院内の空気清浄機みたいにじんわり効きます。",
+        cheer: "本日の合言葉: おはようの一言、意外と高性能。",
+        fortune: "メモパッド。短いひと言が、チームの連携をふわっと助けてくれそうです。",
+        color: "やさしさは、渡した人にも戻ってくる小さなエネルギーです。使っても減りません。",
+        quote: "スタッフに短い声かけをひとつ。大げさでなくて大丈夫、声のトーンだけで十分明るくなります。"
       },
       moon: {
         type: "ひと息メモタイプ",
-        title: "心の余白を少し作る日",
-        summary: "静かな時間を少し作ると、本当に大事なことが見えやすい日です。",
-        fortune: "チェックリスト。頭の中の小さな気がかりを、紙の上に置いてあげましょう。",
-        color: "立ち止まることは、迷いではなく自分を大切にする合図です。",
-        quote: "今日やることを3つだけ書く。全部ではなく、まず3つで十分です。"
+        title: "頭の中を受付整理する日",
+        summary: "気がかりを抱えたまま走らなくて大丈夫。今日は書き出すほど、心の待合室がすっきりします。",
+        cheer: "本日の合言葉: まず書く。脳内の順番待ちを減らす。",
+        fortune: "チェックリスト。頭の中の小さな気がかりを、紙の上にそっと案内しましょう。",
+        color: "立ち止まることは、迷いではなく自分を大切にする合図です。保留も立派な判断です。",
+        quote: "今日やることを3つだけ書く。全部ではなく、まず3つ。欲張らないのが今日の勝ち筋です。"
       },
       leaf: {
         type: "準備ばっちりタイプ",
-        title: "身の回りを整える日",
-        summary: "小さな片づけや準備が、今日の安心につながりやすい日です。",
+        title: "準備で気分が上向く日",
+        summary: "小さな片づけが、今日のあなたを助けます。道具も心も、置き場所が決まると強いです。",
+        cheer: "本日の合言葉: 30秒整えると、あとで自分が助かる。",
         fortune: "グローブ。手元の準備が整うと、気持ちまでしゃきっとしそうです。",
-        color: "整えた場所から、心にもやさしい風が入ってきます。",
-        quote: "よく使う場所を30秒だけ整える。短いのに、効き目はなかなかです。"
+        color: "整えた場所から、心にもやさしい風が入ってきます。朝の自分に小さな拍手です。",
+        quote: "よく使う場所を30秒だけ整える。短いのに効き目はなかなか、院内版の小さな整頓体操です。"
       }
     };
 
@@ -614,9 +769,11 @@
     const resultType = document.getElementById("result-type");
     const resultTitle = document.getElementById("result-title");
     const resultSummary = document.getElementById("result-summary");
+    const resultCheer = document.getElementById("result-cheer");
     const fortuneText = document.getElementById("fortune-text");
     const colorText = document.getElementById("color-text");
     const quoteText = document.getElementById("quote-text");
+    const restartButton = document.getElementById("restart-button");
 
     let currentQuestionIndex = 0;
     let scores = {};
@@ -671,17 +828,21 @@
       resultType.textContent = result.type;
       resultTitle.textContent = result.title;
       resultSummary.textContent = result.summary;
+      resultCheer.textContent = result.cheer;
       fortuneText.textContent = result.fortune;
       colorText.textContent = result.color;
       quoteText.textContent = result.quote;
       showScreen(resultScreen);
     }
 
-    startButton.addEventListener("click", () => {
+    function restart() {
       currentQuestionIndex = 0;
       scores = {};
       showQuestion();
-    });
+    }
+
+    startButton.addEventListener("click", restart);
+    restartButton.addEventListener("click", restart);
   </script>
 </body>
 </html>
