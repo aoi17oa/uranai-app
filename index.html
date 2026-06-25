@@ -3,8 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>朝のラッキー診断</title>
+  <title>デンタル朝診断</title>
   <style>
+    :root {
+      --ink: #203247;
+      --text: #4b6470;
+      --mint: #dff7f1;
+      --mint-strong: #2f7d8c;
+      --blue: #dff0ff;
+      --ivory: #fffdf6;
+      --lemon: #f7df7b;
+      --line: rgba(111, 160, 169, 0.28);
+      --shadow: rgba(54, 94, 113, 0.13);
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -18,12 +30,15 @@
     body {
       min-width: 320px;
       overflow-x: hidden;
-      color: #21324a;
+      color: var(--ink);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 16px;
       line-height: 1.7;
       background:
-        linear-gradient(180deg, rgba(232, 248, 244, 0.9) 0%, rgba(246, 251, 255, 0.96) 48%, #fffdf6 100%);
+        linear-gradient(90deg, rgba(111, 160, 169, 0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(111, 160, 169, 0.08) 1px, transparent 1px),
+        linear-gradient(160deg, #e9f8f4 0%, #f6fbff 52%, var(--ivory) 100%);
+      background-size: 32px 32px, 32px 32px, auto;
     }
 
     .page {
@@ -32,17 +47,36 @@
       justify-content: center;
       min-height: 100svh;
       padding: 28px 18px;
+      position: relative;
+      overflow: hidden;
     }
 
     .app-shell {
       width: 100%;
       max-width: 430px;
       padding: 24px 18px;
-      border: 1px solid rgba(121, 169, 177, 0.28);
+      border: 1px solid var(--line);
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 18px 38px rgba(54, 94, 113, 0.12);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 253, 246, 0.94));
+      box-shadow: 0 18px 38px var(--shadow);
+      position: relative;
       text-align: center;
+    }
+
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 8px;
+      border-radius: 8px 8px 0 0;
+      background: repeating-linear-gradient(
+        90deg,
+        #aee7dd 0 22px,
+        #dff0ff 22px 44px,
+        #f7df7b 44px 58px,
+        #f8fffd 58px 72px
+      );
     }
 
     .screen[hidden] {
@@ -61,34 +95,79 @@
       font-weight: 700;
     }
 
-    .icon-row {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin: 0 0 18px;
+    .hero-illustration {
+      width: 100%;
+      min-height: 132px;
+      margin: 10px 0 18px;
+      position: relative;
       color: #4f8d99;
     }
 
-    .line-icon {
+    .hero-tooth,
+    .tool-chip {
       display: grid;
       place-items: center;
-      width: 42px;
-      height: 42px;
       border: 1px solid rgba(109, 165, 177, 0.26);
       border-radius: 8px;
-      background: #f6fcfb;
-      box-shadow: 0 6px 14px rgba(54, 94, 113, 0.08);
+      box-shadow: 0 8px 18px rgba(54, 94, 113, 0.1);
     }
 
-    .line-icon svg {
+    .hero-tooth {
+      width: 112px;
+      height: 112px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, #ffffff 0%, #effbf8 100%);
+      color: #2f7d8c;
+    }
+
+    .hero-tooth svg {
+      width: 78px;
+      height: 82px;
+      stroke: currentColor;
+    }
+
+    .tool-chip {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      background: #fffdf7;
+      color: #4f8d99;
+    }
+
+    .tool-chip svg,
+    .outcome-icon svg {
       width: 24px;
       height: 24px;
       stroke: currentColor;
     }
 
+    .tool-chip:nth-child(2) {
+      left: 34px;
+      top: 12px;
+      transform: rotate(-8deg);
+    }
+
+    .tool-chip:nth-child(3) {
+      right: 34px;
+      top: 18px;
+      transform: rotate(7deg);
+    }
+
+    .tool-chip:nth-child(4) {
+      left: 64px;
+      bottom: 4px;
+      background: #f8fffd;
+    }
+
+    .tool-chip:nth-child(5) {
+      right: 64px;
+      bottom: 0;
+      background: #fffbea;
+    }
+
     h1 {
       margin: 0;
-      color: #1c2f45;
+      color: var(--ink);
       font-size: clamp(28px, 7vw, 38px);
       line-height: 1.25;
       letter-spacing: 0;
@@ -97,7 +176,7 @@
     .lead {
       margin: 18px auto 24px;
       max-width: 22em;
-      color: #4b6470;
+      color: var(--text);
       font-size: 17px;
     }
 
@@ -118,20 +197,22 @@
       padding: 10px 12px;
       border: 1px solid rgba(121, 169, 177, 0.22);
       border-radius: 8px;
-      background: #fffdf7;
+      background: linear-gradient(90deg, #fffdf7 0%, #f8fffd 100%);
       color: #2f4657;
       font-size: 16px;
       font-weight: 700;
     }
 
-    .outcome-mark {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
+    .outcome-icon {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
       flex: 0 0 auto;
-      border-radius: 999px;
-      background: #f6df7e;
-      box-shadow: 0 0 0 4px rgba(246, 223, 126, 0.2);
+      border-radius: 8px;
+      background: #fffbea;
+      color: #2f7d8c;
+      box-shadow: inset 0 0 0 1px rgba(247, 223, 123, 0.55);
     }
 
     .start-button,
@@ -152,9 +233,19 @@
       min-height: 56px;
       padding: 14px 22px;
       color: #ffffff;
-      background: #2f7d8c;
+      background: linear-gradient(135deg, #2f7d8c 0%, #4c9aaa 100%);
       box-shadow: 0 10px 22px rgba(47, 125, 140, 0.22);
       font-size: 18px;
+    }
+
+    .start-button::after {
+      content: "";
+      width: 9px;
+      height: 9px;
+      margin-left: 10px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(-45deg);
     }
 
     .start-button:focus-visible,
@@ -164,15 +255,31 @@
     }
 
     .progress {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       margin: 0 0 16px;
+      padding: 6px 12px;
+      border: 1px solid rgba(121, 169, 177, 0.24);
+      border-radius: 999px;
+      background: #fffbea;
       color: #315c67;
       font-size: 16px;
       font-weight: 700;
     }
 
+    .progress::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: #7bcfc0;
+      box-shadow: 14px 0 0 #dff0ff, 28px 0 0 #f7df7b;
+    }
+
     .question-title {
       margin: 0 0 22px;
-      color: #1c2f45;
+      color: var(--ink);
       font-size: 26px;
       line-height: 1.4;
       letter-spacing: 0;
@@ -186,20 +293,33 @@
     }
 
     .choice-button {
+      justify-content: flex-start;
+      gap: 12px;
       min-height: 54px;
       padding: 14px 16px;
       color: #263f50;
-      background: #fbfefd;
+      background: linear-gradient(90deg, #fbfefd 0%, #fffdf7 100%);
       border: 1px solid rgba(121, 169, 177, 0.28);
       box-shadow: 0 8px 18px rgba(54, 94, 113, 0.1);
       font-size: 17px;
       line-height: 1.45;
-      text-align: center;
+      text-align: left;
+    }
+
+    .choice-button::before {
+      content: "";
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      border: 2px solid rgba(47, 125, 140, 0.34);
+      border-radius: 6px;
+      background: #ffffff;
+      box-shadow: inset 0 0 0 4px #fffbea;
     }
 
     .complete-message {
       margin: 18px auto 30px;
-      color: #4b6470;
+      color: var(--text);
       font-size: 17px;
     }
 
@@ -211,11 +331,21 @@
     }
 
     .result-item {
+      position: relative;
       padding: 16px;
       border: 1px solid rgba(121, 169, 177, 0.24);
       border-radius: 8px;
-      background: #fbfefd;
+      background: linear-gradient(180deg, #fbfefd 0%, #fffdf7 100%);
       box-shadow: 0 8px 18px rgba(54, 94, 113, 0.1);
+      overflow: hidden;
+    }
+
+    .result-item::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: #aee7dd;
     }
 
     .result-label {
@@ -240,6 +370,31 @@
         padding: 22px 16px;
       }
 
+      .hero-illustration {
+        min-height: 126px;
+      }
+
+      .hero-tooth {
+        width: 104px;
+        height: 104px;
+      }
+
+      .tool-chip:nth-child(2) {
+        left: 20px;
+      }
+
+      .tool-chip:nth-child(3) {
+        right: 20px;
+      }
+
+      .tool-chip:nth-child(4) {
+        left: 48px;
+      }
+
+      .tool-chip:nth-child(5) {
+        right: 48px;
+      }
+
       .lead,
       .complete-message {
         font-size: 16px;
@@ -255,8 +410,15 @@
   <main class="page">
     <div class="app-shell">
       <section class="screen" id="start-screen" aria-labelledby="app-title">
-        <div class="icon-row" aria-hidden="true">
-          <span class="line-icon">
+        <div class="hero-illustration" aria-hidden="true">
+          <span class="hero-tooth">
+            <svg viewBox="0 0 80 88" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10c8-5 13 2 18 2s10-7 18-2c12 8 8 26 3 39-4 11-5 27-13 27-5 0-5-16-8-16s-3 16-8 16c-8 0-9-16-13-27-5-13-9-31 3-39z" fill="#ffffff" />
+              <path d="M31 33h18" />
+              <path d="M40 24v18" />
+            </svg>
+          </span>
+          <span class="tool-chip">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 18L16 6" />
               <path d="M14 4l6 6" />
@@ -264,14 +426,14 @@
               <path d="M6 16l2 2" />
             </svg>
           </span>
-          <span class="line-icon">
+          <span class="tool-chip">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="9" r="5" />
               <path d="M15 13l5 5" />
               <path d="M7.5 9h7" />
             </svg>
           </span>
-          <span class="line-icon">
+          <span class="tool-chip">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M7 5h10" />
               <path d="M7 9h10" />
@@ -279,16 +441,52 @@
               <path d="M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
             </svg>
           </span>
+          <span class="tool-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 13c1-6 3-9 7-9s6 3 7 9" />
+              <path d="M6 13h12" />
+              <path d="M8 17c2 2 6 2 8 0" />
+              <path d="M10 20h4" />
+            </svg>
+          </span>
         </div>
-        <p class="badge">クリニックの朝に、少しだけ元気を</p>
-        <h1 id="app-title">朝のラッキー診断</h1>
-        <p class="lead">5つの質問で、今日の気分に合う小さなお守りを見つけます。</p>
+        <p class="badge">歯科クリニックの朝に、ひと息ラッキー</p>
+        <h1 id="app-title">デンタル朝診断</h1>
+        <p class="lead">5つの質問で、白衣ポケットに入るくらいの小さな元気を見つけます。</p>
         <ul class="outcome-list" aria-label="結果で見えるもの">
-          <li><span class="outcome-mark" aria-hidden="true"></span>ラッキーアイテム</li>
-          <li><span class="outcome-mark" aria-hidden="true"></span>元気になれる名言</li>
-          <li><span class="outcome-mark" aria-hidden="true"></span>吉となる行動</li>
+          <li>
+            <span class="outcome-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 18L16 6" />
+                <path d="M14 4l6 6" />
+                <path d="M12 8l4 4" />
+              </svg>
+            </span>
+            ラッキーアイテム
+          </li>
+          <li>
+            <span class="outcome-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 4h12v16H6z" />
+                <path d="M9 8h6" />
+                <path d="M9 12h5" />
+                <path d="M9 16h4" />
+              </svg>
+            </span>
+            元気になれる名言
+          </li>
+          <li>
+            <span class="outcome-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 5h10" />
+                <path d="M8 12l2 2 5-5" />
+                <path d="M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+              </svg>
+            </span>
+            吉となる行動
+          </li>
         </ul>
-        <button class="start-button" id="start-button" type="button">はじめる</button>
+        <button class="start-button" id="start-button" type="button">今日のラッキーをみる</button>
       </section>
 
       <section class="screen" id="question-screen" aria-labelledby="question-title" hidden>
@@ -303,15 +501,15 @@
         <p class="complete-message" id="result-summary"></p>
         <div class="result-list" aria-label="占い結果">
           <section class="result-item">
-            <p class="result-label">今日の運勢</p>
+            <p class="result-label">ラッキーアイテム</p>
             <p class="result-text" id="fortune-text"></p>
           </section>
           <section class="result-item">
-            <p class="result-label">ラッキーカラー</p>
+            <p class="result-label">元気になれる名言</p>
             <p class="result-text" id="color-text"></p>
           </section>
           <section class="result-item">
-            <p class="result-label">ぴったりな名言</p>
+            <p class="result-label">吉となる行動</p>
             <p class="result-text" id="quote-text"></p>
           </section>
         </div>
@@ -365,44 +563,44 @@
 
     const results = {
       spark: {
-        type: "きらめきタイプ",
-        title: "小さな一歩が光る日",
-        summary: "思いついたことを少しだけ試すと、気持ちが前に向きやすい日です。",
-        fortune: "新しい流れを受け取りやすい運勢です。完璧を目指すより、まず一歩だけ動いてみるとよさそうです。",
-        color: "クリアブルー",
-        quote: "小さな一歩も、今日のあなたをちゃんと進めてくれます。"
+        type: "すっきりスタートタイプ",
+        title: "小さな一歩が進む日",
+        summary: "思いついたことを少しだけ試すと、朝の空気が軽くなりそうです。",
+        fortune: "歯ブラシ。まっすぐな毛先みたいに、今日は最初のひと動きがきれいに決まりそうです。",
+        color: "小さな一歩も、今日のあなたをちゃんと進めてくれます。",
+        quote: "朝いちばんに、よく使う道具をひとつだけ整える。気分までさっぱりします。"
       },
       calm: {
-        type: "やすらぎタイプ",
+        type: "ゆったり整えタイプ",
         title: "自分のペースを守る日",
         summary: "急がず整えることで、自然と調子が戻ってくる日です。",
-        fortune: "落ち着いて選ぶほど運が味方します。予定を詰め込みすぎず、深呼吸できる余白を残しましょう。",
-        color: "やさしい水色",
-        quote: "ゆっくり進む時間にも、ちゃんと意味があります。"
+        fortune: "デンタルミラー。少し角度を変えて見るだけで、気づけることが増える日です。",
+        color: "ゆっくり進む時間にも、ちゃんと意味があります。",
+        quote: "始業前に深呼吸をひとつ。急がない準備が、今日の安心を作ります。"
       },
       heart: {
-        type: "ぬくもりタイプ",
+        type: "にこやか声かけタイプ",
         title: "言葉がやさしく届く日",
         summary: "人とのやりとりから、ほっとする力をもらいやすい日です。",
-        fortune: "あいさつや短い会話が運をひらきます。無理に明るくしなくても、素直な一言で十分です。",
-        color: "ソフトピンク",
-        quote: "やさしさは、渡した人にも戻ってくる小さなお守りです。"
+        fortune: "メモパッド。ひと言メモが、チームの空気をふわっと助けてくれそうです。",
+        color: "やさしさは、渡した人にも戻ってくる小さなエネルギーです。",
+        quote: "スタッフに短い声かけをひとつ。受付まわりの空気まで明るくなります。"
       },
       moon: {
-        type: "月あかりタイプ",
-        title: "心の声を聞く日",
+        type: "ひと息メモタイプ",
+        title: "心の余白を少し作る日",
         summary: "静かな時間を少し作ると、本当に大事なことが見えやすい日です。",
-        fortune: "考えを整理するほど安心が増える運勢です。迷ったら、今日は少し保留にしても大丈夫です。",
-        color: "ラベンダー",
-        quote: "立ち止まることは、迷いではなく自分を大切にする合図です。"
+        fortune: "チェックリスト。頭の中の小さな気がかりを、紙の上に置いてあげましょう。",
+        color: "立ち止まることは、迷いではなく自分を大切にする合図です。",
+        quote: "今日やることを3つだけ書く。全部ではなく、まず3つで十分です。"
       },
       leaf: {
-        type: "整えタイプ",
+        type: "準備ばっちりタイプ",
         title: "身の回りを整える日",
         summary: "小さな片づけや準備が、今日の安心につながりやすい日です。",
-        fortune: "足元を整えるほど、気持ちも軽くなります。ひとつだけ片づける、ひとつだけ決める、それで十分です。",
-        color: "ミントグリーン",
-        quote: "整えた場所から、心にもやさしい風が入ってきます。"
+        fortune: "グローブ。手元の準備が整うと、気持ちまでしゃきっとしそうです。",
+        color: "整えた場所から、心にもやさしい風が入ってきます。",
+        quote: "よく使う場所を30秒だけ整える。短いのに、効き目はなかなかです。"
       }
     };
 
