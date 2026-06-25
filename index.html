@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>今日の星うらない</title>
+  <title>朝のラッキー診断</title>
   <style>
     * {
       box-sizing: border-box;
@@ -18,28 +18,30 @@
     body {
       min-width: 320px;
       overflow-x: hidden;
-      color: #1f2a44;
+      color: #21324a;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 16px;
       line-height: 1.7;
       background:
-        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.95) 0 2px, transparent 3px),
-        radial-gradient(circle at 76% 26%, rgba(255, 255, 255, 0.85) 0 1px, transparent 2px),
-        radial-gradient(circle at 42% 72%, rgba(255, 255, 255, 0.8) 0 1px, transparent 2px),
-        linear-gradient(180deg, #eef7ff 0%, #dbeaff 45%, #f8fbff 100%);
+        linear-gradient(180deg, rgba(232, 248, 244, 0.9) 0%, rgba(246, 251, 255, 0.96) 48%, #fffdf6 100%);
     }
 
     .page {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      min-height: 100vh;
-      padding: 32px 18px;
+      min-height: 100svh;
+      padding: 28px 18px;
     }
 
     .app-shell {
       width: 100%;
       max-width: 430px;
+      padding: 24px 18px;
+      border: 1px solid rgba(121, 169, 177, 0.28);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 18px 38px rgba(54, 94, 113, 0.12);
       text-align: center;
     }
 
@@ -49,29 +51,87 @@
 
     .badge {
       display: inline-block;
-      margin: 0 0 18px;
-      padding: 6px 14px;
-      border: 1px solid rgba(72, 104, 157, 0.18);
+      margin: 0 0 16px;
+      padding: 6px 12px;
+      border: 1px solid rgba(109, 165, 177, 0.34);
       border-radius: 999px;
-      color: #365273;
-      background: rgba(255, 255, 255, 0.68);
+      color: #315c67;
+      background: #f8fffd;
       font-size: 16px;
       font-weight: 700;
     }
 
+    .icon-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 0 18px;
+      color: #4f8d99;
+    }
+
+    .line-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(109, 165, 177, 0.26);
+      border-radius: 8px;
+      background: #f6fcfb;
+      box-shadow: 0 6px 14px rgba(54, 94, 113, 0.08);
+    }
+
+    .line-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
     h1 {
       margin: 0;
-      color: #17233d;
-      font-size: clamp(32px, 9vw, 44px);
+      color: #1c2f45;
+      font-size: clamp(28px, 7vw, 38px);
       line-height: 1.25;
       letter-spacing: 0;
     }
 
     .lead {
-      margin: 18px auto 30px;
+      margin: 18px auto 24px;
       max-width: 22em;
-      color: #425b78;
+      color: #4b6470;
       font-size: 17px;
+    }
+
+    .outcome-list {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 24px;
+      padding: 0;
+      list-style: none;
+      text-align: left;
+    }
+
+    .outcome-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid rgba(121, 169, 177, 0.22);
+      border-radius: 8px;
+      background: #fffdf7;
+      color: #2f4657;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .outcome-mark {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: #f6df7e;
+      box-shadow: 0 0 0 4px rgba(246, 223, 126, 0.2);
     }
 
     .start-button,
@@ -92,8 +152,8 @@
       min-height: 56px;
       padding: 14px 22px;
       color: #ffffff;
-      background: #315f9f;
-      box-shadow: 0 10px 22px rgba(49, 95, 159, 0.22);
+      background: #2f7d8c;
+      box-shadow: 0 10px 22px rgba(47, 125, 140, 0.22);
       font-size: 18px;
     }
 
@@ -105,14 +165,14 @@
 
     .progress {
       margin: 0 0 16px;
-      color: #365273;
+      color: #315c67;
       font-size: 16px;
       font-weight: 700;
     }
 
     .question-title {
       margin: 0 0 22px;
-      color: #17233d;
+      color: #1c2f45;
       font-size: 26px;
       line-height: 1.4;
       letter-spacing: 0;
@@ -128,10 +188,10 @@
     .choice-button {
       min-height: 54px;
       padding: 14px 16px;
-      color: #233755;
-      background: rgba(255, 255, 255, 0.84);
-      border: 1px solid rgba(72, 104, 157, 0.22);
-      box-shadow: 0 8px 18px rgba(45, 79, 124, 0.12);
+      color: #263f50;
+      background: #fbfefd;
+      border: 1px solid rgba(121, 169, 177, 0.28);
+      box-shadow: 0 8px 18px rgba(54, 94, 113, 0.1);
       font-size: 17px;
       line-height: 1.45;
       text-align: center;
@@ -139,7 +199,7 @@
 
     .complete-message {
       margin: 18px auto 30px;
-      color: #425b78;
+      color: #4b6470;
       font-size: 17px;
     }
 
@@ -152,28 +212,32 @@
 
     .result-item {
       padding: 16px;
-      border: 1px solid rgba(72, 104, 157, 0.2);
+      border: 1px solid rgba(121, 169, 177, 0.24);
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.78);
-      box-shadow: 0 8px 18px rgba(45, 79, 124, 0.1);
+      background: #fbfefd;
+      box-shadow: 0 8px 18px rgba(54, 94, 113, 0.1);
     }
 
     .result-label {
       margin: 0 0 6px;
-      color: #365273;
+      color: #315c67;
       font-size: 16px;
       font-weight: 700;
     }
 
     .result-text {
       margin: 0;
-      color: #233755;
+      color: #263f50;
       font-size: 16px;
     }
 
     @media (max-width: 390px) {
       .page {
-        padding-inline: 16px;
+        padding: 20px 14px;
+      }
+
+      .app-shell {
+        padding: 22px 16px;
       }
 
       .lead,
@@ -191,10 +255,40 @@
   <main class="page">
     <div class="app-shell">
       <section class="screen" id="start-screen" aria-labelledby="app-title">
-        <p class="badge">今日の運勢・ラッキーカラー・名言</p>
-        <h1 id="app-title">今日の星うらない</h1>
-        <p class="lead">5つの質問で、今日のあなたにぴったりの運勢を見つけます。</p>
-        <button class="start-button" id="start-button" type="button">占いをはじめる</button>
+        <div class="icon-row" aria-hidden="true">
+          <span class="line-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 18L16 6" />
+              <path d="M14 4l6 6" />
+              <path d="M12 8l4 4" />
+              <path d="M6 16l2 2" />
+            </svg>
+          </span>
+          <span class="line-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="9" r="5" />
+              <path d="M15 13l5 5" />
+              <path d="M7.5 9h7" />
+            </svg>
+          </span>
+          <span class="line-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 5h10" />
+              <path d="M7 9h10" />
+              <path d="M8 13l2 2 5-5" />
+              <path d="M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+            </svg>
+          </span>
+        </div>
+        <p class="badge">クリニックの朝に、少しだけ元気を</p>
+        <h1 id="app-title">朝のラッキー診断</h1>
+        <p class="lead">5つの質問で、今日の気分に合う小さなお守りを見つけます。</p>
+        <ul class="outcome-list" aria-label="結果で見えるもの">
+          <li><span class="outcome-mark" aria-hidden="true"></span>ラッキーアイテム</li>
+          <li><span class="outcome-mark" aria-hidden="true"></span>元気になれる名言</li>
+          <li><span class="outcome-mark" aria-hidden="true"></span>吉となる行動</li>
+        </ul>
+        <button class="start-button" id="start-button" type="button">はじめる</button>
       </section>
 
       <section class="screen" id="question-screen" aria-labelledby="question-title" hidden>
